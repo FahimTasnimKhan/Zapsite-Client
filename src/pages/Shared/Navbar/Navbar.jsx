@@ -14,6 +14,9 @@ const links = (
     <li>
       <NavLink to="/coverage">Coverage</NavLink>
     </li>
+    <li>
+      <NavLink to="/sendparcel">Sendparcel</NavLink>
+    </li>
   </>
 );
 
@@ -23,7 +26,7 @@ const Navbar = () => {
     logOut().then();
   };
   return (
-    <div className="navbar bg-base-100 shadow-sm">
+    <div className="navbar bg-base-100  mb-10">
       <div className="navbar-start">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -67,6 +70,9 @@ const Navbar = () => {
             Login
           </Link>
         )}
+        <Link to={"/"} className=" ml-4 btn btn-primary text-black">
+          Be a Rider
+        </Link>
       </div>
     </div>
   );

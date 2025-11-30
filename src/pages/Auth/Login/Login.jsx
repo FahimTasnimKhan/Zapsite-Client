@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import UseAuth from "../../../hooks/UseAuth";
-import { Link } from "react-router";
+import { Link, Navigate } from "react-router";
 import SocialLogin from "../SocialLogin/SocialLogin";
 
 const Login = () => {
@@ -9,7 +9,7 @@ const Login = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const { signInUser } = UseAuth();
+  const { signInUser, user } = UseAuth();
   const handleLogin = (data) => {
     signInUser(data.email, data.password)
       .then((res) => console.log(res.user))
@@ -20,6 +20,7 @@ const Login = () => {
         // ..
       });
   };
+
   return (
     <div className="card bg-base-100 w-full mx-auto max-w-sm shrink-0 shadow-2xl">
       <form className="card-body" onSubmit={handleSubmit(handleLogin)}>
@@ -88,6 +89,7 @@ const Login = () => {
         </p>
         <SocialLogin></SocialLogin>
       </form>
+      {user ? <Navigate to={"/"}></Navigate> : ""}
     </div>
   );
 };

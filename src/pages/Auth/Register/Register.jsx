@@ -1,7 +1,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import UseAuth from "../../../hooks/UseAuth";
-import { Link } from "react-router";
+import { Link, Navigate } from "react-router";
 import SocialLogin from "../SocialLogin/SocialLogin";
 
 const Register = () => {
@@ -10,13 +10,15 @@ const Register = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const { registerUser } = UseAuth();
+  const { registerUser, user } = UseAuth();
 
   const handleRegistration = (data) => {
     console.log("Data:", data);
     registerUser(data.email, data.password)
       .then((res) => {
         console.log(res.user);
+        // Store the photo and get the photo URL
+        // Updata user profile
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -34,6 +36,32 @@ const Register = () => {
             <h3 className="text-3xl text-center">Welcome To Zap Shift</h3>
             <p className="text-center">Please Register Your Account</p>
             <fieldset className="fieldset">
+              {/* name */}
+              <label className="label">Your Name</label>
+              <input
+                type="text"
+                {...register("name", { required: "name is required" })}
+                className="input"
+                placeholder="Your Name"
+              />
+              {errors.name?.type === "required" && (
+                <p role="alert" className="text-red-500">
+                  name is required
+                </p>
+              )}
+              {/* Photo */}
+              <label className="label">Your Photo</label>
+              <input
+                type="file"
+                {...register("photo", { required: "Photo is required" })}
+                className="file-input file-input-success"
+                placeholder="Your Photo"
+              />
+              {errors.name?.type === "required" && (
+                <p role="alert" className="text-red-500">
+                  name is required
+                </p>
+              )}
               {/* Email */}
               <label className="label">Email</label>
               <input
@@ -85,6 +113,7 @@ const Register = () => {
               </div>
 
               <button className="btn btn-neutral mt-4">Register</button>
+              {user ? <Navigate to="/"></Navigate> : ""}
             </fieldset>
             <p>
               Already Have an Account?

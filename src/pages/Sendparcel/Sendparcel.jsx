@@ -1,15 +1,17 @@
 import React from "react";
 import { useForm, Watch } from "react-hook-form";
 import { useLoaderData } from "react-router";
+import Swal from "sweetalert2";
+import useAxioxSecure from "../../hooks/useAxioxSecure";
 
 const Sendparcel = () => {
   const {
     register,
     handleSubmit,
     watch,
-    formState: { errors },
+    // formState: { errors },
   } = useForm();
-
+  const axiosSecure = useAxioxSecure();
   const serviceCenters = useLoaderData();
   const regionsDuplicate = serviceCenters.map((c) => c.region);
   const regions = [...new Set(regionsDuplicate)];
@@ -24,7 +26,10 @@ const Sendparcel = () => {
   };
   const handleSendPacel = (data) => {
     let cost = 0;
+    let mincharge = 0;
+    let extracharge = 0;
     const parceltype = data.Parceltype;
+    const parcelWeight = parseFloat(data.ParcelWeight);
     if (parceltype == "document") {
       if (data.Senders_District === data.Recievers_District) {
         cost = 60;
@@ -32,7 +37,44 @@ const Sendparcel = () => {
         cost = 80;
       }
     } else {
+      if (data.ParcelWeight < 3) {
+        if (data.Senders_District === data.Recievers_District) {
+          cost = 110;
+        } else {
+          cost = 150;
+        }
+      } else {
+        if (data.Senders_District === data.Recievers_District) {
+          let mincharge = 110;
+          let extracharge = 40 * (parcelWeight - 3);
+          cost = mincharge + extracharge;
+        } else {
+          mincharge = 150;
+          extracharge = 40 * (parcelWeight - 3) + 40;
+          cost = mincharge + extracharge;
+        }
+      }
     }
+    Swal.fire({
+      title: "Are you sure?",
+      text: `The total cost for your parcel is ${cost}`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, confirm my order!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axiosSecure.post("/parcel", data).then((res) => {
+          console.log(res.data);
+        });
+        Swal.fire({
+          title: "Success!",
+          text: "Your order has been confirmed.",
+          icon: "success",
+        });
+      }
+    });
     console.log(data);
     console.log(cost);
   };

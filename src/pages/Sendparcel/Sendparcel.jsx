@@ -77,6 +77,7 @@ const Sendparcel = () => {
     });
     console.log(data);
     console.log(cost);
+    data.cost = cost;
   };
 
   return (

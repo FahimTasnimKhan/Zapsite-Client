@@ -3,28 +3,33 @@ import Logo from "../../../Components/Logo/Logo";
 import { Link, NavLink } from "react-router";
 import UseAuth from "../../../hooks/UseAuth";
 
-const links = (
-  <>
-    <li>
-      <NavLink to="/">Services</NavLink>
-    </li>
-    <li>
-      <NavLink to="/">About US</NavLink>
-    </li>
-    <li>
-      <NavLink to="/coverage">Coverage</NavLink>
-    </li>
-    <li>
-      <NavLink to="/sendparcel">Sendparcel</NavLink>
-    </li>
-  </>
-);
-
 const Navbar = () => {
   const { user, logOut } = UseAuth();
   const handleLogout = () => {
     logOut().then();
   };
+  const links = (
+    <>
+      <li>
+        <NavLink to="/">Services</NavLink>
+      </li>
+      <li>
+        <NavLink to="/">About US</NavLink>
+      </li>
+      <li>
+        <NavLink to="/coverage">Coverage</NavLink>
+      </li>
+      <li>
+        <NavLink to="/sendparcel">Sendparcel</NavLink>
+      </li>
+
+      {user && (
+        <li>
+          <NavLink to="/dashboard/my-parcels">My Parcels</NavLink>
+        </li>
+      )}
+    </>
+  );
   return (
     <div className="navbar bg-base-100  mb-10">
       <div className="navbar-start">

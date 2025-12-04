@@ -5,6 +5,7 @@ import useAxioxSecure from "../../../hooks/useAxioxSecure";
 import { FiEdit } from "react-icons/fi";
 import { FaMagnifyingGlass, FaTrashCan } from "react-icons/fa6";
 import Swal from "sweetalert2";
+import { Link } from "react-router";
 
 const MyParcels = () => {
   const { user } = UseAuth();
@@ -35,6 +36,7 @@ const MyParcels = () => {
           if (res.data.deletedCount > 0) {
             Swal.fire("Deleted!", "Your parcel has been deleted.", "success");
 
+            // 🔥 Refresh data to fix the UI
             queryClient.invalidateQueries(["my-parcels", user?.email]);
           }
         });
@@ -58,6 +60,7 @@ const MyParcels = () => {
               <th>Name</th>
               <th>Cost</th>
               <th>Payment Status</th>
+              <th>Delivery Status</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -67,7 +70,18 @@ const MyParcels = () => {
                 <td>{index + 1}</td>
                 <td>{parcel["Parcel Name"]}</td>
                 <td>${parcel.cost}</td>
-                <td>{parcel.paymentStatus || "Pending"}</td>
+                <td>
+                  {parcel.paymentStatus === "paid" ? (
+                    <span className="text-green-500">Paid</span>
+                  ) : (
+                    <Link to={`/dashboard/payment/${parcel._id}`}>
+                      <button className="btn btn-primary text-black">
+                        Pay
+                      </button>
+                    </Link>
+                  )}
+                </td>
+                <td>Blue</td>
                 <td className="flex gap-2">
                   <button className="btn btn-sm hover:bg-primary">
                     Edit <FiEdit />
